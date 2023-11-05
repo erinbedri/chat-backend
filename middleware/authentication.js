@@ -11,11 +11,14 @@ const authenticateUser = async (req, res, next) => {
     try {
         if (accessToken) {
             const payload = isTokenValid(accessToken);
+            //console.log(payload);
             request.user = payload.user;
+
             return next();
         }
 
         const payload = isTokenValid(refreshToken);
+        console.log(payload);
 
         const existingToken = await Token.findOne({
             user: payload.user.userId,
@@ -35,7 +38,8 @@ const authenticateUser = async (req, res, next) => {
 
         next();
     } catch (error) {
-        throw new CustomError.UnauthenticatedError("Authentication invalid");
+        console.log(error);
+        throw new CustomError.UnauthenticatedError("Authentication invalid!");
     }
 };
 
