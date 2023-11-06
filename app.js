@@ -20,6 +20,7 @@ const connectDB = require("./db/connect");
 // routers
 const authRouter = require("./routes/authRoutes");
 const userRouter = require("./routes/userRoutes");
+const chatRouter = require("./routes/chatRoutes");
 
 // middleware
 const notFoundMiddleware = require("./middleware/not-found");
@@ -52,6 +53,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/chats", chatRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
