@@ -12,7 +12,7 @@ const authenticateUser = async (req, res, next) => {
         if (accessToken) {
             const payload = isTokenValid(accessToken);
             //console.log(payload);
-            request.user = payload.user;
+            req.user = payload.user;
 
             return next();
         }
@@ -33,7 +33,7 @@ const authenticateUser = async (req, res, next) => {
             user: payload.user,
             refreshToken: existingToken.refreshToken,
         });
-        request.user = payload.user;
+        req.user = payload.user;
 
         next();
     } catch (error) {
