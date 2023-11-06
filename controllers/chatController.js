@@ -18,7 +18,7 @@ const createChat = async (req, res) => {
         }
 
         const newChat = await Chat.create({ members: [creatorId, memberId] });
-        res.status(StatusCodes.OK).json(newChat);
+        res.status(StatusCodes.CREATED).json(newChat);
     } catch (error) {
         console.log(error);
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error);
