@@ -5,9 +5,7 @@ const createChat = async (req, res) => {
     const creatorId = req.user.userId;
     const { memberId } = req.body;
 
-    console.log(creatorId);
     console.log(memberId);
-
     try {
         const chat = await Chat.findOne({
             members: { $all: [creatorId, memberId] },

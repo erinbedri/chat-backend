@@ -9,7 +9,7 @@ const getAllUsers = async (req, res) => {
         _id: { $ne: req.user.userId }, // Exclude the current user by ID
     }).select("-password -createdAt -updatedAt -__v -role");
 
-    res.status(StatusCodes.OK).json({ users });
+    res.status(StatusCodes.OK).json(users);
 };
 
 const getSingleUser = async (req, res) => {
