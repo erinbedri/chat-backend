@@ -20,11 +20,11 @@ const createMessage = async (req, res) => {
 };
 
 const getMessages = async (req, res) => {
-    const { chatId } = req.body;
+    const { chatId } = req.params;
 
     try {
         const messages = await Message.find({
-            chatId,
+            chat: chatId,
         });
 
         res.status(StatusCodes.OK).json(messages);

@@ -5,7 +5,7 @@ const { authenticateUser } = require("../middleware/authentication");
 
 const { getMessages, createMessage } = require("../controllers/messageController");
 
-router.route("/").get(authenticateUser, getMessages);
+router.route("/:chatId").get(authenticateUser, getMessages);
 router.route("/").post(authenticateUser, createMessage);
 
 module.exports = router;
