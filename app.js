@@ -1,5 +1,6 @@
 require("dotenv").config();
 require("express-async-errors");
+const socketIO = require("socket.io");
 
 // express
 const express = require("express");
@@ -30,7 +31,7 @@ const errorHandlerMiddleware = require("./middleware/error-handler");
 app.set("trust proxy", 1);
 app.use(
     rateLimiter({
-        windoMs: 15 * 60 * 1000,
+        windowMs: 15 * 60 * 1000,
         max: 100,
     })
 );
@@ -62,13 +63,41 @@ app.use(errorHandlerMiddleware);
 
 const port = process.env.PORT || 5000;
 
-const start = async () => {
+const startDB = async () => {
     try {
         await connectDB(process.env.MONGO_URL);
-        app.listen(port, console.log(`Server is listening at ${port}...`));
+        console.log("DB Connected...");
     } catch (err) {
         console.error(err);
     }
 };
+startDB();
 
-start();
+const expressServer = app.listen(port, console.log(`Server is listening at ${port}...`));
+
+// socket io
+const io = socketIO(expressServer, {
+    cors: {
+        origin: "http://localhost:3000",
+    },
+});
+
+let onlineUsers = [];
+
+io.on("connection", (socket) => {
+    console.log("user connected:", socket.id);
+
+    socket.on("disconnect", () => {
+        console.log("user disconnected:", socket.id);
+    });
+
+    socket.on("addNewUser", (userId) => {
+        !onlineUsers.some((user) => user.userId == userId) &&
+            onlineUsers.push({
+                userId,
+                socketId: socket.id,
+            });
+    });
+
+    console.log("ONLINE:", onlineUsers);
+});
