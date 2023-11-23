@@ -32,7 +32,7 @@ app.set("trust proxy", 1);
 app.use(
     rateLimiter({
         windowMs: 15 * 60 * 1000,
-        max: 100,
+        max: 1000,
     })
 );
 app.use(helmet());
@@ -85,19 +85,32 @@ const io = socketIO(expressServer, {
 let onlineUsers = [];
 
 io.on("connection", (socket) => {
-    console.log("user connected:", socket.id);
-
-    socket.on("disconnect", () => {
-        console.log("user disconnected:", socket.id);
-    });
+    console.log("new connection", socket.id);
 
     socket.on("addNewUser", (userId) => {
-        !onlineUsers.some((user) => user.userId == userId) &&
+        console.log(userId);
+        !onlineUsers.some((user) => user.userId === userId) &&
             onlineUsers.push({
                 userId,
                 socketId: socket.id,
             });
+
+        io.emit("getOnlineUsers", onlineUsers);
     });
 
-    console.log("ONLINE:", onlineUsers);
+    socket.on("sendMessage", (message) => {
+        console.log(message);
+        const user = onlineUsers.find((user) => user.userId == message.recipientId);
+
+        if (user) {
+            io.to(user.socketId).emit("getMessage", message);
+        }
+    });
+
+    socket.on("disconnect", () => {
+        console.log("user disconnected:", socket.id);
+
+        onlineUsers = onlineUsers.filter((user) => user.socketId !== socket.id);
+        io.emit("getOnlineUsers", onlineUsers);
+    });
 });
