@@ -78,8 +78,7 @@ const expressServer = app.listen(port, console.log(`Server is listening at ${por
 // socket io
 const io = socketIO(expressServer, {
     cors: {
-        //origin: process.env.URL,
-        origin: "https://chat-f7aa5.web.app/",
+        origin: process.env.URL,
     },
 });
 
