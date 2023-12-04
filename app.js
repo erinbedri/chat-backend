@@ -119,3 +119,6 @@ io.on("connection", (socket) => {
         io.emit("getOnlineUsers", onlineUsers);
     });
 });
+
+console.log("ENV:", process.env.NODE_ENV);
+console.log("URL:", process.env.URL);
