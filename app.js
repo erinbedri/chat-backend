@@ -78,7 +78,7 @@ const expressServer = app.listen(port, console.log(`Server is listening at ${por
 // socket io
 const io = socketIO(expressServer, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: process.env.URL,
     },
 });
 
